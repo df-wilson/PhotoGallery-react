@@ -1,0 +1,12 @@
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (1, 'vancouver', '2018-05-16 01:33:43', '2018-05-16 01:33:43');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (2, 'stanley park', '2018-05-16 01:33:50', '2018-05-16 01:33:50');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (3, 'giraffe', '2018-05-16 03:14:28', '2018-05-16 03:14:28');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (4, 'nature', '2018-05-18 03:48:20', '2018-05-18 03:48:20');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (5, 'music', '2018-05-18 03:51:02', '2018-05-18 03:51:02');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (6, 'concert', '2018-05-18 03:51:07', '2018-05-18 03:51:07');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (7, 'van halen', '2018-05-18 03:51:12', '2018-05-18 03:51:12');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (8, 'beach', '2018-06-03 00:07:16', '2018-06-03 00:07:16');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (9, 'spain', '2020-05-25 20:26:23', '2020-05-25 20:26:23');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (10, 'architecture', '2020-05-25 20:26:35', '2020-05-25 20:26:35');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (11, 'europe', '2020-05-25 20:26:46', '2020-05-25 20:26:46');
+INSERT INTO keywords (id, name, created_at, updated_at) VALUES (12, 'bird', '2020-05-29 03:18:56', '2020-05-29 03:18:56');

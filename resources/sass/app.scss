@@ -1,0 +1,111 @@
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+body {
+  max-width: 1200px;
+}
+
+h2 {
+  font-size: 1.4em;
+}
+
+.btn-xs {
+  padding: 0.1rem 0.4rem;
+  font-size: 0.7875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.dropbox {
+  outline: 2px dashed grey; /* the dash box */
+  outline-offset: -10px;
+  background: lightcyan;
+  color: dimgray;
+  padding: 10px 10px;
+  min-height: 200px; /* minimum height */
+  position: relative;
+  cursor: pointer;
+}
+
+.input-file {
+  opacity: 0; /* invisible but it's there! */
+  width: 100%;
+  height: 200px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.dropbox:hover {
+  background: lightblue; /* when mouse over to the drop zone, change color */
+}
+
+.dropbox p {
+  font-size: 1.2em;
+  text-align: center;
+  padding: 50px 0;
+}
+
+.img-preview {
+  width: 200px;
+  height: 150px;
+}
+
+.img-desc {
+  display: block;
+  margin: 10px 0;
+}
+
+.img-area {
+  margin: 1em auto;
+}
+
+#keyword-edit-link {
+  float: right;
+  font-size: 0.75em;
+  margin-top: 0.15em;
+
+}
+
+.keyword-search {
+  margin-bottom:15px;
+}
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
+#desc-text {
+  margin: 1em auto;
+}
+
+#img-title-edit {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px 0 10px 0;
+}
+
+#keyword-input {
+  margin-bottom: 10px;
+}
+
+#add-keyword-form {
+  margin-bottom: 1em;
+}
+
+#text-search {
+  max-width: 400px;
+}
+
+#keyword-div {
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+#public-checkbox {
+  margin-right: 5px;
+}
