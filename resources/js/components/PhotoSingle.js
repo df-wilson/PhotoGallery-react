@@ -7,6 +7,7 @@ const endpoint = "/api/photos/";
 function PhotoSingle(props)
 {
    const [photo, setPhoto] = useState({});
+   const [allKeywords, setAllKeywords] = useState([]);
    const [keywords, setKeywords] = useState([]);
    const [isUpdateDescButtonShown, setIsUpdateDescButtonShown] = useState(false);
    const [isEditTitle, setIsEditTitle] = useState(false);
@@ -18,7 +19,8 @@ function PhotoSingle(props)
 
    useEffect(() => {
       fetchPhoto();
-      fetchKeywords(props.match.params.id);
+      fetchPhotoKeywords(props.match.params.id);
+      fetchAllKeywords();
    }, []);
 
    function fetchPhoto()
@@ -35,12 +37,22 @@ function PhotoSingle(props)
       }
    }
 
-   function fetchKeywords(photoId)
+   function fetchAllKeywords()
+   {
+      axios.get('/api/keywords')
+         .then(({data}) => {
+            setAllKeywords(data.keywords);
+         })
+         .catch(function (error) {
+            console.log("fetchAllKeywords - Error: " + error);
+         });
+   }
+
+   function fetchPhotoKeywords(photoId)
    {
       if(photoId) {
          axios.get(endpoint+photoId+'/keywords')
             .then(({data}) => {
-               console.log(JSON.stringify(data.keywords));
                setKeywords(data.keywords);
             })
             .catch(function (error) {
@@ -146,30 +158,27 @@ function PhotoSingle(props)
 
    function submitKeyword(event)
    {
-      const keyword = event.target.value.trim();
-      setNewKeyword("");
-      console.log("In submitKeyword"+keyword);
-      return;
+      event.preventDefault();
 
-      if(keyword.length < 1) {
+      const trimmedKeyword = newKeyword.trim();
+      
+      if(trimmedKeyword.length < 1) {
          return;
       }
 
       axios.post('/api/keywords/photo/' + photo.id, {
-         keyword: keyword
+         keyword: trimmedKeyword
       })
-         .then(function (response) {
+         .then((response) => {
             if(response.status == 201) {
-               //let newKeywords = keywords.push({"id":data.id, "name": keyword})
-               console.log("Keywords: " + JSON.stringify(keywords));
+               setKeywords(keywords.concat({"id":response.data.keyword_id, "name": trimmedKeyword}));
             }
          })
          .catch(function (error) {
             console.log(error);
          });
 
-      //setNewKeyword("");
-
+      setNewKeyword("");
    }
 
    function removeKeyword(keywordId)
@@ -244,6 +253,9 @@ function PhotoSingle(props)
                      <div id="add-keyword-form">
                         <input id="keyword-input" type="text" size="20" list="keyword-options" value={newKeyword} onKeyPress={checkKeywordInputForEnter} onChange={() => setNewKeyword(event.target.value)}/>
                         <datalist id="keyword-options">
+                           {allKeywords.map((keyword) =>
+                              <option key={keyword.id} value={keyword.name} />
+                           )}
                         </datalist>
                         <button id="keyword-update-btn" className="btn btn-primary btn-sm mr-1" type="button" onClick={submitKeyword}>Add</button>
                         <button id="keyword-done-btn" className="btn btn-primary btn-sm" type="button" onClick={() => setShowKeywordAddForm(false)}>Done</button>
