@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Keywords;
 use App\Models\Photo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Image;
@@ -27,6 +28,71 @@ class PhotoController extends Controller
         logger("Api/PhotoController::index LEAVE");
 
         return $photos;
+    }
+
+    public function delete(int $photoId)
+    {
+        $userId = Auth::id();
+
+        logger("Api/PhotoController::delete - Enter", ["User Id" => $userId, "Photo Id" => $photoId]);
+
+        $msg = "There was a server error.";
+        $code = 500;
+
+        if($userId)
+        {
+            if(Photo::isUserPhotoOwner($userId, $photoId))
+            {
+                Keywords::removeAllPhotoKeywords($photoId);
+                $photo = Photo::find($photoId);
+                if($photo)
+                {
+                    logger("Api/PhotoController::delete - Photo filepath ", ["Filepath" => $photo->filepath]);
+
+                    // Delete file and thumbnail.
+                    $filepath = str_replace("/storage", "/public", $photo->filepath);
+                    if(Storage::exists($filepath))
+                    {
+                        Storage::delete($filepath);
+                    }
+                    else
+                    {
+                        logger()->error("Photo does not exist.", ["Photo" => $filepath]);
+                    }
+
+                    $filepath = str_replace("/storage", "/public", $photo->thumbnail_filepath);
+                    if(Storage::exists($filepath))
+                    {
+                        Storage::delete($filepath);
+                    }
+
+                    // Delete database record of photo
+                    $photo->delete();
+
+                    $msg = "Photo deleted.";
+                    $code = 200;
+                }
+                else
+                {
+                    $msg = "Photo not found.";
+                    $code = 404;
+                }
+            }
+            else
+            {
+                $msg = "You don't have permission to delete that photo.";
+                $code = 400;
+            }
+        }
+        else
+        {
+            $msg = "You must be logged in to delete photos.";
+            $code = 400;
+        }
+
+        logger("Api/PhotoController::delete - Leave", ["HTTP Code" => $code, "Message" => $msg]);
+
+        return response()->json(['msg' => 'photo deleted'], $code);
     }
 
     public function getAllPublic()

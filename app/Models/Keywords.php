@@ -76,4 +76,16 @@ class Keywords extends Model
         logger('Keywords::removeKeywordFromPhoto - LEAVE', ["Deleted" => $deleted]);
         return $deleted;
     }
+
+    public static function removeAllPhotoKeywords(int $photoId)
+    {
+        logger('Keywords::removeAllPhotoKeywords - Enter', ["Photo Id" => $photoId]);
+
+        $deleted = DB::delete('DELETE FROM photo_keywords WHERE photo_id = :photo_id',
+                              ["photo_id" => $photoId]);
+
+        logger('Keywords::removeAllPhotoKeywords - Leave', ["Deleted" => $deleted]);
+        return $deleted;
+    }
+
 }

@@ -31,6 +31,7 @@ Route::post('/api/photos/{id}/description', [App\Http\Controllers\Api\PhotoContr
 Route::post('/api/photos/{id}/title', [App\Http\Controllers\Api\PhotoController::class, 'updateTitle']);
 Route::get('/api/photos/{id}/next', [App\Http\Controllers\Api\PhotoController::class, 'getNextPhoto']);
 Route::get('/api/photos/{id}/prev', [App\Http\Controllers\Api\PhotoController::class,'getPreviousPhoto']);
+Route::delete('/api/photos/{id}', [App\Http\Controllers\Api\PhotoController::class, 'delete']);
 
 Route::view('/{any}', 'photos.photo-manager')->where('any', '.*');
 

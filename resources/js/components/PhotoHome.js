@@ -4,16 +4,29 @@ import { Link } from 'react-router-dom';
 
 const ENDPOINT = "/api/photos";
 
-function PhotoHome(props) {
+function PhotoHome(props)
+{
    const [photos, setPhotos] = useState([]);
    const [keywords, setKeywords] = useState([]);
    const [selectedKeywordId, setSelectedKeywordId] = useState(0);
    const [pageCount, setPageCount] = useState(1);
+   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
    useEffect(() => {
       fetchKeywords();
       fetch();
    }, []);
+
+   function deleteImage(photoId)
+   {
+      axios.delete("/api/photos/"+photoId)
+         .then(response => {
+            setPhotos(photos.filter(photo => photo.id != photoId));
+         })
+         .catch(error => {
+            console.log(error);
+         });
+   }
 
    function fetch() {
       let keywordId = 0;
@@ -93,7 +106,11 @@ function PhotoHome(props) {
                      }
                   </select>
                   <span className="ml-3">
-                     <button className="btn btn-success" onClick={() => {props.history.push('/photos/add')}}>Add</button>
+                     <button className="btn btn-success mr-2" onClick={() => {props.history.push('/photos/add')}}>Add</button>
+
+                     <button className="btn btn-success" onClick={() => {setIsDeleteMode(!isDeleteMode)}}>
+                        <span>{isDeleteMode ? 'View Mode' : 'Delete Mode'}</span>
+                     </button>
                   </span>
                </div>
             </div>
@@ -119,10 +136,16 @@ function PhotoHome(props) {
                            </div>
                         </div>
                         <div className="card-footer">
-                           <p style={{height: 50+'px'}}>
-                              <b>Description</b><br />
-                              { photo.description }
-                           </p>
+                           {isDeleteMode ?
+                              <p className="mt-3">
+                                 <button className="btn btn-danger" onClick={() => {deleteImage(photo.id)}}>Delete</button>
+                              </p>
+                              :
+                              <p style={{height: 50+'px'}}>
+                                 <b>Description</b><br />
+                                 { photo.description }
+                              </p>
+                           }
                         </div>
                      </div>
                   </div>
