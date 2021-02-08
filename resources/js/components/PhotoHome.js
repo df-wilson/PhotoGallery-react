@@ -93,7 +93,7 @@ function PhotoHome(props)
       <div>
          <div className="row">
             <div className="col-12">
-               <h1 className="text-center">Photo Gallery</h1>
+               <h1 className="text-center mb-4">Photo Gallery</h1>
                <div className="keyword-search mb-2">
                   Keyword Search:
                   <select name="keyword-select" className="ml-1" value={selectedKeywordId} onChange={keywordSelected}>
