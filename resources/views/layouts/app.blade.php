@@ -17,8 +17,9 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container-fluid">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -68,8 +69,9 @@
                         @endguest
                     </ul>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>
+
 
         <main class="mt-3">
             @yield('content')
