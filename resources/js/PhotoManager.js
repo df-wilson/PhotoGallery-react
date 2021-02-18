@@ -4,6 +4,7 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 
 import PhotoAdd from "./components/PhotoAdd.js";
 import PhotoHome from "./components/PhotoHome.js";
+import PhotoSearch from "./components/PhotoSearch.js";
 import PhotoSingle from "./components/PhotoSingle.js";
 import NoMatch from "./components/NoMatch.js";
 
@@ -16,8 +17,10 @@ function PhotoManager() {
                <Route component={PhotoHome} path="/" exact />
                <Route component={PhotoHome} path="/home" exact />
                <Route component={PhotoHome} path="/photos/keywords/:id" exact />
+               <Route component={PhotoHome} path="/photos/show-search-results" exact />
                <Route component={PhotoAdd} path="/photos/add" exact />
-               <Route component={PhotoSingle} path="/photos/:id" />
+               <Route component={PhotoSearch} path="/photos/search" exact />
+               <Route component={PhotoSingle} path="/photos/:id" exact />
                <Route component={NoMatch} path="*" />
             </Switch>
          </BrowserRouter>

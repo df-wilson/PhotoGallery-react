@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const ENDPOINT = "/api/photos";
 
@@ -11,6 +11,8 @@ function PhotoHome(props)
    const [selectedKeywordId, setSelectedKeywordId] = useState(0);
    const [pageCount, setPageCount] = useState(1);
    const [isDeleteMode, setIsDeleteMode] = useState(false);
+
+   const url = useLocation();
 
    useEffect(() => {
       fetchKeywords();
@@ -35,16 +37,27 @@ function PhotoHome(props)
       let privatephotos=false;
       let fromdate="";
       let todate="";
-      if(props.match.params.id) {
-         keywordId = props.match.params.id;
+
+      if(url.pathname === "/photos/show-search-results") {
+         const params = new URLSearchParams(url.search);
+         keywordId = parseInt(params.get("keyword"));
+         text = params.get("text");
+         fromdate = params.get("fromdate");
+         todate = params.get("todate");
+         publicphotos = params.get("publicphotos");
+         privatephotos = params.get("privatephotos");
+      } else {
+         if(props.match.params.id) {
+            keywordId = props.match.params.id;
+         }
       }
-      /*if(this.keywordid ||
-         this.text ||
-         this.fromdate ||
-         this.todate ||
-         this.privatephotos ||
-         this.publicphotos) */
-      if(keywordId)
+
+      if(keywordId     ||
+         text          ||
+         fromdate      ||
+         todate        ||
+         publicphotos  ||
+         privatephotos)
       {
          axios.get('/api/photos/search', {
             params: {
@@ -75,6 +88,7 @@ function PhotoHome(props)
    }
 
    function fetchKeywords() {
+      console.log("In fetch keywords.")
       axios.get('/api/keywords')
          .then(({data}) => {
             setKeywords(data.keywords);
@@ -82,6 +96,7 @@ function PhotoHome(props)
    }
 
    function keywordSelected(event) {
+      console.log("In keywordSelected");
       setSelectedKeywordId(event.target.value);
       axios.get('/api/photos/keyword/'+event.target.value)
          .then(({data}) => {
