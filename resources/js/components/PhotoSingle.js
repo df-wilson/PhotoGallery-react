@@ -30,12 +30,10 @@ function PhotoSingle(props)
       {
          axios.get(endpoint+props.match.params.id)
               .then(({data}) => {
-                 setPhoto(data);
-                 if(data.is_public == "1" || data.is_public == true) {
-                     setIsPublic(true);
-                 } else {
-                    setIsPublic(false);
-                 }
+                  setPhotoData(data);
+              })
+              .catch(function (error) {
+                  console.log("fetchPhoto - Error: " + error);
               });
       } else {
          console.log("No matching photo id");
@@ -122,6 +120,18 @@ function PhotoSingle(props)
       setIsEditTitle(false);
    }
 
+   function setPhotoData(data)
+   {
+      setShowKeywordAddForm(false);
+      setShowEditKeywords(false);
+      setPhoto(data);
+      if(data.is_public == "1" || data.is_public == true) {
+         setIsPublic(true);
+      } else {
+         setIsPublic(false);
+      }
+   }
+
    function showNextPhoto(event)
    {
       if(photo.id)
@@ -129,8 +139,8 @@ function PhotoSingle(props)
          axios.get(endpoint+photo.id+"/next")
             .then(({data}) => {
                console.log("showNextPhoto: "+JSON.stringify(data));
-               setPhoto(data);
-               fetchKeywords(data.id);
+               setPhotoData(data);
+               fetchPhotoKeywords(data.id);
             });
       } else {
          alert("No matching photo id");
@@ -144,8 +154,8 @@ function PhotoSingle(props)
          axios.get(endpoint+photo.id+"/prev")
             .then(({data}) => {
                if(typeof(data)==='object' && !Array.isArray(data)) {
-                  setPhoto(data);
-                  fetchKeywords(data.id);
+                  setPhotoData(data);
+                  fetchPhotoKeywords(data.id);
                }
             })
             .catch(function (error) {
