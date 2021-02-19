@@ -9,8 +9,9 @@ function PhotoSingle(props)
    const [photo, setPhoto] = useState({});
    const [allKeywords, setAllKeywords] = useState([]);
    const [keywords, setKeywords] = useState([]);
-   const [isUpdateDescButtonShown, setIsUpdateDescButtonShown] = useState(false);
    const [isEditTitle, setIsEditTitle] = useState(false);
+   const [isPublic, setIsPublic] = useState(false);
+   const [isUpdateDescButtonShown, setIsUpdateDescButtonShown] = useState(false);
    const [newKeyword, setNewKeyword] = useState("");
    const [showKeywordAddForm, setShowKeywordAddForm] = useState(false);
    const [showEditKeywords, setShowEditKeywords] = useState(false);
@@ -30,10 +31,14 @@ function PhotoSingle(props)
          axios.get(endpoint+props.match.params.id)
               .then(({data}) => {
                  setPhoto(data);
-                 console.log(JSON.stringify(data));
+                 if(data.is_public == "1" || data.is_public == true) {
+                     setIsPublic(true);
+                 } else {
+                    setIsPublic(false);
+                 }
               });
       } else {
-         alert("No matching photo id");
+         console.log("No matching photo id");
       }
    }
 
@@ -200,9 +205,14 @@ function PhotoSingle(props)
       }
    }
 
-   function submitTogglePublic()
+   function submitTogglePublic(event)
    {
-
+      setIsPublic(event.target.checked);
+      axios.post('/api/photos/'+photo.id+'/public', {
+         checked: event.target.checked
+      }).catch(function (error) {
+            console.log(error);
+      });
    }
 
    return (
@@ -276,7 +286,12 @@ function PhotoSingle(props)
                </div>
 
                <div id="public-toggle-div">
-                  <input type="checkbox" id="public-checkbox" name="public-checkbox" onChange={submitTogglePublic} />
+                  <input type="checkbox"
+                         id="public-checkbox"
+                         name="public-checkbox"
+                         checked={isPublic}
+                         onChange={submitTogglePublic}
+                  />
                   <label htmlFor="public-checkbox">Allow public</label>
                </div>
                <div id="navigation-section">

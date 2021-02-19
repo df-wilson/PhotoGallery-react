@@ -28,6 +28,7 @@ Route::get('/api/photos', [App\Http\Controllers\Api\PhotoController::class,'inde
 Route::get('/api/photos/{id}', [App\Http\Controllers\Api\PhotoController::class,'show']);
 Route::get('/api/photos/{id}/keywords', [App\Http\Controllers\Api\PhotoController::class,'getKeywordsForPhoto']);
 Route::post('/api/photos/{id}/description', [App\Http\Controllers\Api\PhotoController::class, 'updateDescription']);
+Route::post('/api/photos/{id}/public', [App\Http\Controllers\Api\PhotoController::class,'updateIsPublic']);
 Route::post('/api/photos/{id}/title', [App\Http\Controllers\Api\PhotoController::class, 'updateTitle']);
 Route::get('/api/photos/{id}/next', [App\Http\Controllers\Api\PhotoController::class, 'getNextPhoto']);
 Route::get('/api/photos/{id}/prev', [App\Http\Controllers\Api\PhotoController::class,'getPreviousPhoto']);
