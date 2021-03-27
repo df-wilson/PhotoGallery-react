@@ -137,7 +137,7 @@ function PhotoHome(props)
          <div className="row">
             <div className="col-12">
                <h1 className="text-center mb-4">Photo Gallery</h1>
-               <div className="keyword-search mb-2">
+               <div className="keyword-search">
                   Keyword Search:
                   <select name="keyword-select" className="ml-1" value={selectedKeywordId} onChange={keywordSelected}>
                      <option disabled value="0">Keywords</option>
@@ -149,9 +149,9 @@ function PhotoHome(props)
                      }
                   </select>
                   <span className="ml-3">
-                     <button className="btn btn-success mr-2" onClick={() => {props.history.push('/photos/add')}}>Add</button>
+                     <button className="btn btn-sm btn-success mr-2" onClick={() => {props.history.push('/photos/add')}}>Add</button>
 
-                     <button className="btn btn-success" onClick={() => {setIsDeleteMode(!isDeleteMode)}}>
+                     <button className="btn btn-sm btn-success" onClick={() => {setIsDeleteMode(!isDeleteMode)}}>
                         <span>{isDeleteMode ? 'View Mode' : 'Delete Mode'}</span>
                      </button>
                   </span>
