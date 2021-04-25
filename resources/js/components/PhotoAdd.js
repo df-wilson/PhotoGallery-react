@@ -55,7 +55,7 @@ function PhotoAdd(props)
          })
          .then(function(response) {
             return response.data.data.map(img => Object.assign({},
-               img, { url: `/storage/images/${img.fileName}` }));
+               img, { url: `/images/${img.fileName}` }));
          });
    }
 

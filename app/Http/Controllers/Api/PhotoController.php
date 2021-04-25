@@ -50,7 +50,7 @@ class PhotoController extends Controller
                     logger("Api/PhotoController::delete - Photo filepath ", ["Filepath" => $photo->filepath]);
 
                     // Delete file and thumbnail.
-                    $filepath = str_replace("/storage", "/public", $photo->filepath);
+                    $filepath = "/public".$photo->filepath;
                     if(Storage::exists($filepath))
                     {
                         Storage::delete($filepath);
@@ -60,7 +60,7 @@ class PhotoController extends Controller
                         logger()->error("Photo does not exist.", ["Photo" => $filepath]);
                     }
 
-                    $filepath = str_replace("/storage", "/public", $photo->thumbnail_filepath);
+                    $filepath = "/public".$photo->thumbnail_filepath;
                     if(Storage::exists($filepath))
                     {
                         Storage::delete($filepath);
@@ -344,8 +344,8 @@ class PhotoController extends Controller
                     if($name) {
                         $extension = $file->extension();
                         $path = $file->storeAs('public/images', $name);
-                        $path = "/storage/images/".$name;
-                        $thumbnailPath = "/storage/images/thumb_".$name;
+                        $path = "/images/".$name;
+                        $thumbnailPath = "/images/thumb_".$name;
 
                         Image::make("./".$path)
                             ->orientate()
