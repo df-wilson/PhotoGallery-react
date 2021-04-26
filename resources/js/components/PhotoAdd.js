@@ -104,8 +104,8 @@ function PhotoAdd(props)
                      <div>
                         <h2>Uploaded {uploadedFiles.length} file(s) successfully.</h2>
                         <p>
-                           <a href="#" onClick={reset}>Upload Again</a>
-                           <a href="/" onClick={reset} className="ml-2">All Photos</a>
+                           <a href="#" className="mr-2" onClick={reset}>Upload Again</a>
+                           <Link to="/">All Photos</Link>
                         </p>
                         {uploadedFiles}
                      </div>
