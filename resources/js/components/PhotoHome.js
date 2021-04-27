@@ -23,6 +23,7 @@ function PhotoHome(props)
    }, []);
 
    useEffect(() => {
+      setCurrentPage(1);
       updateDisplayPhotos(0, perPage);
    }, [photos]);
 
