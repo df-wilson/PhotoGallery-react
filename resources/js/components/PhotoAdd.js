@@ -71,7 +71,7 @@ function PhotoAdd(props)
       <div>
          <div className="row">
             <div className="col-12">
-               <p>Add photo</p>
+               <h1 class="text-center mb-4">Add Photo</h1>
 
                <div id="upload">
                   {
