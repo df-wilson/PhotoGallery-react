@@ -335,56 +335,87 @@ class PhotoController extends Controller
         $returnData = [];
 
         $userId = Auth::id();
+        if(!$userId) {
+            logger()->error("Api/PhotoController::upload - User not authorized.");
+            $code = 401;
+            return response(["msg" => $message, "data" => $returnData], $code);
+        }
 
         $files = $request->file('photos');
         if ($files) {
             foreach($files as $file) {
-                if($file->isValid()) {
-                    $name = $file->getClientOriginalName();
-                    if($name) {
-                        $extension = $file->extension();
-                        $path = $file->storeAs('public/images', $name);
-                        $path = "/images/".$name;
-                        $thumbnailPath = "/images/thumb_".$name;
+                $name = $file->getClientOriginalName();
+                $extension = $file->extension();
+                $path = $file->storeAs('public/images', $name);
+                $path = "/images/".$name;
+                $thumbnailPath = "/images/thumb_".$name;
 
-                        Image::make("./".$path)
-                            ->orientate()
-                            ->fit(200, 150)
-                            ->save("./".$thumbnailPath);
-                        Image::make("./".$path)
-                            ->orientate()
-                            ->save("./".$path);
+                $downloadedPhoto = Image::make(".".$path);
 
-                        $photo = new Photo;
-                        $photo->user_id = $userId;
-                        $photo->name = $name;
-                        $photo->is_public = false;
-                        $photo->filepath = $path;
-                        $photo->thumbnail_filepath = $thumbnailPath;
-                        $photo->description = "";
-                        $photo->save();
-
-                        logger("Api/PhotoController::upload. File uploaded",
-                            ["User Id"=>$userId, "photo Id" => $photo->id, "Photo name" => $name]);
-                        $content = ["id" => $photo->id, "fileName" => "thumb_$name", "originalName" => $name];
-                        array_push($returnData, $content);
-                    } else {
-                        logger()->error("Api/PhotoController::upload - Photo does not have a name.");
-                        $message = "Photo does not have a name.";
-                        $code = 400;
-                        break;
-                    }
-                } else {
-                    logger()->error("Api/PhotoController::upload - File is not valid.");
-                    $message = "Unable to upload photo. The file size is either too big, or the photo type is not supported.";
-                    $code = 400;
-                    break;
+                // Get exif and iptc info
+                $description = $downloadedPhoto->iptc("Caption");
+                if(gettype($description) != "string") {
+                    // If iptc caption does not exist, binary data may be returned. In this case
+                    // return empty string.
+                    $description = "";
                 }
+                $dateTime = $downloadedPhoto->exif("DateTime") ?? '';
+                $manufacturer = $downloadedPhoto->exif("Manufacturer");
+                if(!$manufacturer) {
+                    $manufacturer = $downloadedPhoto->exif("Make") ?? '';
+                }
+                $model = $downloadedPhoto->exif("Model") ?? '';
+                $iso = $downloadedPhoto->exif("ISOSpeedRatings") ?? '';
+                $shutter_speed = $this->exifShutterSpeedToDisplayValue($downloadedPhoto->exif("ExposureTime") ?? '');
+                $aperture = $this->exifApertureToDisplayValue($downloadedPhoto->exif("FNumber") ?? '');
+                $width = $downloadedPhoto->exif("ExifImageWidth");
+                if($width) {
+                    $width.="px";
+                } else {
+                    $width = '';
+                }
+                $height = $downloadedPhoto->exif("ExifImageLength");
+                if($height) {
+                    $height.="px";
+                } else {
+                    $height = '';
+                }
+
+                // Save photo and thumbnail
+                $downloadedPhoto->orientate()
+                                ->save(".".$path);
+
+                $downloadedPhoto->fit(200, 150)
+                                ->save(".".$thumbnailPath);
+
+                $photo = new Photo;
+                $photo->user_id = $userId;
+                $photo->name = $name;
+                $photo->is_public = false;
+                $photo->filepath = $path;
+                $photo->thumbnail_filepath = $thumbnailPath;
+                $photo->description = $description;
+                $photo->photo_datetime = $dateTime;
+                $photo->width = $width;
+                $photo->height = $height;
+                $photo->camera_brand = substr($manufacturer,0,15);
+                $photo->camera_model = substr($model,0,15);
+                $photo->iso = $iso;
+                $photo->shutter_speed = $shutter_speed;
+                $photo->aperture = $aperture;
+                $photo->save();
+
+                $content = ["id" => $photo->id, "fileName" => "thumb_$name", "originalName" => $name];
+                array_push($returnData, $content);
+                logger("Api/PhotoController::upload. File uploaded",
+                    ["User Id"=>$userId, "Photo Id"=>$photo->id, "Photo name" => $name]);
             }
 
             $message = "ok";
-            $code = 200;
-        } else {
+            $code=200;
+        }
+        else
+        {
             logger()->error("Api/PhotoController::upload - No file in request.");
             $message = "No photos uploaded.";
             $code = 400;
@@ -392,5 +423,41 @@ class PhotoController extends Controller
 
         logger("Api/PhotoController::upload. LEAVE", ["Message" => $message]);
         return response(["msg" => $message, "data" => $returnData], $code);
+    }
+
+    private function exifApertureToDisplayValue(string $exifAperture)
+    {
+        $displayAperture = '';
+
+        $values = explode("/", $exifAperture);
+        if(count($values) == 2) {
+            $numerator = intval($values[0]);
+            $denominator = intval($values[1]);
+
+            if($denominator > 0) {
+                $result = $numerator / $denominator;
+                $displayAperture = 'F'.strval($result);
+            }
+        }
+
+        return $displayAperture;
+    }
+
+    private function exifShutterSpeedToDisplayValue(string $exifShutterSpeed)
+    {
+        $displayShutterSpeed = '';
+
+        $values = explode("/", $exifShutterSpeed);
+        if(count($values) == 2) {
+            $numerator = intval($values[0]);
+            $denominator = intval($values[1]);
+
+            if($denominator > 0) {
+                $result = $numerator / $denominator;
+                $displayShutterSpeed = number_format($result, 4, '.', '')."s";
+            }
+        }
+
+        return $displayShutterSpeed;
     }
 }

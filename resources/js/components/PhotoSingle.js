@@ -295,6 +295,46 @@ function PhotoSingle(props)
                   )}
                </div>
 
+               <div id="metadata-section">
+                  <h2>Photo Info</h2>
+                  <table>
+                     <tbody>
+                        <tr>
+                           <td>Date:</td>
+                           <td>{photo.photo_datetime && photo.photo_datetime.replace(/:/g, '-').substr(0,10)}</td>
+                        </tr>
+                        <tr>
+                           <td>Camera:</td>
+                           <td>{photo.camera_brand ? photo.camera_brand : ''}</td>
+                        </tr>
+                        <tr>
+                           <td>Model:</td>
+                           <td>{photo.camera_model ? photo.camera_model : ''}</td>
+                        </tr>
+                        <tr>
+                           <td>Width:</td>
+                           <td>{photo.width ? photo.width : ''}</td>
+                        </tr>
+                        <tr>
+                           <td>Height:</td>
+                           <td>{photo.height ? photo.height : ''}</td>
+                        </tr>
+                        <tr>
+                           <td>ISO:</td>
+                           <td>{photo.iso ? photo.iso : ''}</td>
+                        </tr>
+                        <tr>
+                           <td>Aperture:</td>
+                           <td>{photo.aperture ? photo.aperture : ''}</td>
+                        </tr>
+                        <tr>
+                           <td>Exposure:</td>
+                           <td>{photo.shutter_speed ? photo.shutter_speed : ''}</td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+
                <div id="public-toggle-div">
                   <input type="checkbox"
                          id="public-checkbox"

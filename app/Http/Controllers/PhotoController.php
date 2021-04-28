@@ -75,21 +75,29 @@ class PhotoController extends Controller
         return view('photos.explore');
     }
 
-    public function show($id)
+    public function show(int $photoId)
     {
-        logger("PhotoController::show ENTER", ["ID" => $id]);
+        logger("PhotoController::show Enter", ["Photo Id" => $photoId]);
 
         if (Auth::check()) {
             $userId = Auth::id();
-            $photo = Photo::getForUser($userId, $id);
+            $photo = Photo::getForUser($userId, $photoId);
 
             if($photo) {
-                $keywords = Keywords::findKeywordsForPhoto($id);
+                $keywords = Keywords::findKeywordsForPhoto($photoId);
                 logger("Keywords are ", ["Keywords" => $keywords]);
                 return view('photos.single',
                             [
                                 'name' => $photo->name,
                                 'description' => $photo->description,
+                                'photo_datetime' => $photo->photo_datetime,
+                                'height' => $photo->height,
+                                'width' => $photo->width,
+                                'camera' => $photo->camera_brand,
+                                'model' => $photo->camera_model,
+                                'iso' => $photo->iso,
+                                'aperture' => $photo->aperture,
+                                'shutter_speed' => $photo->shutter_speed,
                                 'src' => $photo->filepath,
                                 'id' => $photo->id,
                                 'is_public' => $photo->is_public,
@@ -104,7 +112,7 @@ class PhotoController extends Controller
         }
     }
 
-    public function showNext($photoId)
+    public function showNext(int $photoId)
     {
         if (Auth::check()) {
             $userId = Auth::id();
@@ -121,6 +129,14 @@ class PhotoController extends Controller
                         [
                             'name' => $photo->name,
                             'description' => $photo->description,
+                            'photo_datetime' => $photo->photo_datetime,
+                            'height' => $photo->height,
+                            'width' => $photo->width,
+                            'camera' => $photo->camera_brand,
+                            'model' => $photo->camera_model,
+                            'iso' => $photo->iso,
+                            'aperture' => $photo->aperture,
+                            'shutter_speed' => $photo->shutter_speed,
                             'src' => $photo->filepath,
                             'id' => $photo->id,
                             'is_public' => $photo->is_public,
@@ -164,8 +180,17 @@ class PhotoController extends Controller
             $keywords = Keywords::findKeywordsForPhoto($photo->id);
             logger("Keywords are ", ["Keywords" => $keywords]);
             return view('photos.single',
-                        ['name' => $photo->name,
+                        [
+                            'name' => $photo->name,
                             'description' => $photo->description,
+                            'photo_datetime' => $photo->photo_datetime,
+                            'height' => $photo->height,
+                            'width' => $photo->width,
+                            'camera' => $photo->camera_brand,
+                            'model' => $photo->camera_model,
+                            'iso' => $photo->iso,
+                            'aperture' => $photo->aperture,
+                            'shutter_speed' => $photo->shutter_speed,
                             'src' => $photo->filepath,
                             'id' => $photo->id,
                             'is_public' => $photo->is_public,
