@@ -72,10 +72,14 @@
             </nav>
         </div>
 
-
         <main class="mt-3">
             @yield('content')
         </main>
+
+        <footer>
+            <hr class="mt-4">
+            <p class="text-center mt-2">&copy; 2021 Dean Wilson</p>
+        </footer>
     </div>
 </body>
 </html>
