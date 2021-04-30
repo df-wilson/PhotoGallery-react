@@ -112,41 +112,6 @@ class PhotoController extends Controller
         }
     }
 
-    public function showNext(int $photoId)
-    {
-        if (Auth::check()) {
-            $userId = Auth::id();
-            $photo = Photo::getNextForUser($userId, $photoId);
-
-            // If the next photo doesn't exist, show the current one
-            if(!$photo) {
-                $photo = Photo::getForUser($userId, $photoId);
-            }
-
-            $keywords = Keywords::findKeywordsForPhoto($photo->id);
-            logger("Keywords are ", ["Keywords" => $keywords]);
-            return view('photos.single',
-                        [
-                            'name' => $photo->name,
-                            'description' => $photo->description,
-                            'photo_datetime' => $photo->photo_datetime,
-                            'height' => $photo->height,
-                            'width' => $photo->width,
-                            'camera' => $photo->camera_brand,
-                            'model' => $photo->camera_model,
-                            'iso' => $photo->iso,
-                            'aperture' => $photo->aperture,
-                            'shutter_speed' => $photo->shutter_speed,
-                            'src' => $photo->filepath,
-                            'id' => $photo->id,
-                            'is_public' => $photo->is_public,
-                            'keywords' => $keywords
-                        ]);
-        } else {
-            return redirect('/login');
-        }
-    }
-
     public function showPhotosWithKeyword(int $keywordId)
     {
         if (Auth::check()) {
@@ -161,41 +126,6 @@ class PhotoController extends Controller
                     'fromDate' => "",
                     'toDate'   => ""
                 ]);
-        } else {
-            return redirect('/login');
-        }
-    }
-
-    public function showPrev($photoId)
-    {
-        if (Auth::check()) {
-            $userId = Auth::id();
-            $photo = Photo::getPreviousForUser($userId, $photoId);
-
-            // If the previous photo doesn't exist, show the current one
-            if(!$photo) {
-                $photo = Photo::getForUser($userId, $photoId);
-            }
-
-            $keywords = Keywords::findKeywordsForPhoto($photo->id);
-            logger("Keywords are ", ["Keywords" => $keywords]);
-            return view('photos.single',
-                        [
-                            'name' => $photo->name,
-                            'description' => $photo->description,
-                            'photo_datetime' => $photo->photo_datetime,
-                            'height' => $photo->height,
-                            'width' => $photo->width,
-                            'camera' => $photo->camera_brand,
-                            'model' => $photo->camera_model,
-                            'iso' => $photo->iso,
-                            'aperture' => $photo->aperture,
-                            'shutter_speed' => $photo->shutter_speed,
-                            'src' => $photo->filepath,
-                            'id' => $photo->id,
-                            'is_public' => $photo->is_public,
-                            'keywords' => $keywords
-                        ]);
         } else {
             return redirect('/login');
         }
