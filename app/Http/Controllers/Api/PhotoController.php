@@ -128,6 +128,12 @@ class PhotoController extends Controller
 
         if (Auth::check()) {
             $photo = Photo::getNextForUser(Auth::id(), $photoId);
+
+            // If the next photo doesn't exist, show the current one
+            if(!$photo) {
+                $photo = Photo::getForUser(Auth::id(), $photoId);
+            }
+
             $returnCode = 200;
         } else {
             logger("Api/PhotoController::getNextPhoto - User not authorized");
@@ -150,6 +156,12 @@ class PhotoController extends Controller
 
         if (Auth::check()) {
             $photo = Photo::getPreviousForUser(Auth::id(), $photoId);
+
+            // If the next photo doesn't exist, show the current one
+            if(!$photo) {
+                $photo = Photo::getForUser(Auth::id(), $photoId);
+            }
+            
             $returnCode = 200;
         } else {
             logger("Api/PhotoController::getNextPhoto - User not authorized");
